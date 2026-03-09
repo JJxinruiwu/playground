@@ -1,0 +1,420 @@
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_multicore.py 
+================================================================================
+Multi-Core Matrix Multiplication (Data Parallel)
+================================================================================
+
+Configuration:
+  Matrix size:  4096x4096
+  Num cores:    4
+  Data type:    float8_e5m2
+  Warmup iter:  5
+  Bench iter:   10
+
+[1/4] Compiling kernel (once)...
+  ✓ Compiled in 12.35s  →  /tmp/build/simple_kernel_cccbaf505bda/simple_kernel.neff
+
+[2/4] Loading NEFF on 4 cores...
+  ✓ Loaded on core 1
+  ✓ Loaded on core 2
+  ✓ Loaded on core 3
+
+[3/4] Allocating tensors per core...
+  ✓ Allocated tensors on 4 cores
+
+[4/4] Benchmarking (all cores in parallel)...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Cores:                 4
+  Wall time / iter:      1.243 ms
+  Core 0 total (10 iters): 12.43 ms
+  Core 1 total (10 iters): 12.36 ms
+  Core 2 total (10 iters): 11.84 ms
+  Core 3 total (10 iters): 12.01 ms
+  ─────────────────────────────────────
+  Aggregate throughput:  442.24 TFLOPS
+  Aggregate memory BW:   161.95 GB/s
+  Per-core throughput:   110.56 TFLOPS
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+
+================================================================================
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_multicore.py 
+================================================================================
+Multi-Core Matrix Multiplication (Data Parallel)
+================================================================================
+
+Configuration:
+  Matrix size:  4096x4096
+  Num cores:    8
+  Data type:    float8_e5m2
+  Warmup iter:  5
+  Bench iter:   10
+
+[1/4] Compiling kernel (once)...
+  ✓ Compiled in 9.27s  →  /tmp/build/simple_kernel_c7e162e9ce70/simple_kernel.neff
+
+[2/4] Loading NEFF on 8 cores...
+  ✓ Loaded on core 1
+  ✓ Loaded on core 2
+  ✓ Loaded on core 3
+  ✓ Loaded on core 4
+  ✓ Loaded on core 5
+  ✓ Loaded on core 6
+  ✓ Loaded on core 7
+
+[3/4] Allocating tensors per core...
+  ✓ Allocated tensors on 8 cores
+
+[4/4] Benchmarking (all cores in parallel)...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Cores:                 8
+  Wall time / iter:      1.291 ms
+  Core 0 total (10 iters): 12.21 ms
+  Core 1 total (10 iters): 12.27 ms
+  Core 2 total (10 iters): 12.28 ms
+  Core 3 total (10 iters): 12.91 ms
+  Core 4 total (10 iters): 11.75 ms
+  Core 5 total (10 iters): 11.86 ms
+  Core 6 total (10 iters): 11.73 ms
+  Core 7 total (10 iters): 12.56 ms
+  ─────────────────────────────────────
+  Aggregate throughput:  851.84 TFLOPS
+  Aggregate memory BW:   311.95 GB/s
+  Per-core throughput:   106.48 TFLOPS
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_multicore.py 
+================================================================================
+Multi-Core Matrix Multiplication (Data Parallel)
+================================================================================
+
+Configuration:
+  Matrix size:  4096x4096
+  Num cores:    16
+  Data type:    float8_e5m2
+  Warmup iter:  5
+  Bench iter:   10
+
+[1/4] Compiling kernel (once)...
+  ✓ Compiled in 8.75s  →  /tmp/build/simple_kernel_c7e162e9ce70/simple_kernel.neff
+
+[2/4] Loading NEFF on 16 cores...
+  ✓ Loaded on core 1
+  ✓ Loaded on core 2
+  ✓ Loaded on core 3
+  ✓ Loaded on core 4
+  ✓ Loaded on core 5
+  ✓ Loaded on core 6
+  ✓ Loaded on core 7
+  ✓ Loaded on core 8
+  ✓ Loaded on core 9
+  ✓ Loaded on core 10
+  ✓ Loaded on core 11
+  ✓ Loaded on core 12
+  ✓ Loaded on core 13
+  ✓ Loaded on core 14
+  ✓ Loaded on core 15
+
+[3/4] Allocating tensors per core...
+  ✓ Allocated tensors on 16 cores
+
+[4/4] Benchmarking (all cores in parallel)...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Cores:                 16
+  Wall time / iter:      1.888 ms
+  Core 0 total (10 iters): 14.69 ms
+  Core 1 total (10 iters): 14.35 ms
+  Core 2 total (10 iters): 13.65 ms
+  Core 3 total (10 iters): 14.58 ms
+  Core 4 total (10 iters): 14.49 ms
+  Core 5 total (10 iters): 15.30 ms
+  Core 6 total (10 iters): 18.88 ms
+  Core 7 total (10 iters): 15.48 ms
+  Core 8 total (10 iters): 14.11 ms
+  Core 9 total (10 iters): 14.63 ms
+  Core 10 total (10 iters): 14.04 ms
+  Core 11 total (10 iters): 17.22 ms
+  Core 12 total (10 iters): 14.77 ms
+  Core 13 total (10 iters): 14.67 ms
+  Core 14 total (10 iters): 17.37 ms
+  Core 15 total (10 iters): 13.95 ms
+  ─────────────────────────────────────
+  Aggregate throughput:  1164.62 TFLOPS
+  Aggregate memory BW:   426.50 GB/s
+  Per-core throughput:   72.79 TFLOPS
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_multicore.py 
+================================================================================
+Multi-Core Matrix Multiplication (Data Parallel)
+================================================================================
+
+Configuration:
+  Matrix size:  4096x4096
+  Num cores:    32
+  Data type:    float8_e5m2
+  Warmup iter:  5
+  Bench iter:   10
+
+[1/4] Compiling kernel (once)...
+  ✓ Compiled in 9.66s  →  /tmp/build/simple_kernel_c7e162e9ce70/simple_kernel.neff
+
+[2/4] Loading NEFF on 32 cores...
+  ✓ Loaded on core 1
+  ✓ Loaded on core 2
+  ✓ Loaded on core 3
+  ✓ Loaded on core 4
+  ✓ Loaded on core 5
+  ✓ Loaded on core 6
+  ✓ Loaded on core 7
+  ✓ Loaded on core 8
+  ✓ Loaded on core 9
+  ✓ Loaded on core 10
+  ✓ Loaded on core 11
+  ✓ Loaded on core 12
+  ✓ Loaded on core 13
+  ✓ Loaded on core 14
+  ✓ Loaded on core 15
+  ✓ Loaded on core 16
+  ✓ Loaded on core 17
+  ✓ Loaded on core 18
+  ✓ Loaded on core 19
+  ✓ Loaded on core 20
+  ✓ Loaded on core 21
+  ✓ Loaded on core 22
+  ✓ Loaded on core 23
+  ✓ Loaded on core 24
+  ✓ Loaded on core 25
+  ✓ Loaded on core 26
+  ✓ Loaded on core 27
+  ✓ Loaded on core 28
+  ✓ Loaded on core 29
+  ✓ Loaded on core 30
+  ✓ Loaded on core 31
+
+[3/4] Allocating tensors per core...
+  ✓ Allocated tensors on 32 cores
+
+[4/4] Benchmarking (all cores in parallel)...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Cores:                 32
+  Wall time / iter:      3.780 ms
+  Core 0 total (10 iters): 32.99 ms
+  Core 1 total (10 iters): 21.02 ms
+  Core 2 total (10 iters): 27.76 ms
+  Core 3 total (10 iters): 37.80 ms
+  Core 4 total (10 iters): 32.31 ms
+  Core 5 total (10 iters): 31.25 ms
+  Core 6 total (10 iters): 35.76 ms
+  Core 7 total (10 iters): 27.09 ms
+  Core 8 total (10 iters): 25.70 ms
+  Core 9 total (10 iters): 29.42 ms
+  Core 10 total (10 iters): 31.68 ms
+  Core 11 total (10 iters): 33.68 ms
+  Core 12 total (10 iters): 31.36 ms
+  Core 13 total (10 iters): 33.37 ms
+  Core 14 total (10 iters): 34.29 ms
+  Core 15 total (10 iters): 19.42 ms
+  Core 16 total (10 iters): 37.14 ms
+  Core 17 total (10 iters): 23.60 ms
+  Core 18 total (10 iters): 30.55 ms
+  Core 19 total (10 iters): 36.39 ms
+  Core 20 total (10 iters): 30.75 ms
+  Core 21 total (10 iters): 29.32 ms
+  Core 22 total (10 iters): 19.77 ms
+  Core 23 total (10 iters): 25.37 ms
+  Core 24 total (10 iters): 34.85 ms
+  Core 25 total (10 iters): 29.63 ms
+  Core 26 total (10 iters): 27.96 ms
+  Core 27 total (10 iters): 31.84 ms
+  Core 28 total (10 iters): 17.58 ms
+  Core 29 total (10 iters): 18.93 ms
+  Core 30 total (10 iters): 37.73 ms
+  Core 31 total (10 iters): 33.99 ms
+  ─────────────────────────────────────
+  Aggregate throughput:  1163.61 TFLOPS
+  Aggregate memory BW:   426.13 GB/s
+  Per-core throughput:   36.36 TFLOPS
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_multicore.py 
+================================================================================
+Multi-Core Matrix Multiplication (Data Parallel)
+================================================================================
+
+Configuration:
+  Matrix size:  4096x4096
+  Num cores:    64
+  Data type:    float8_e5m2
+  Warmup iter:  5
+  Bench iter:   10
+
+[1/4] Compiling kernel (once)...
+  ✓ Compiled in 10.06s  →  /tmp/build/simple_kernel_c7e162e9ce70/simple_kernel.neff
+
+[2/4] Loading NEFF on 64 cores...
+  ✓ Loaded on core 1
+  ✓ Loaded on core 2
+  ✓ Loaded on core 3
+  ✓ Loaded on core 4
+  ✓ Loaded on core 5
+  ✓ Loaded on core 6
+  ✓ Loaded on core 7
+  ✓ Loaded on core 8
+  ✓ Loaded on core 9
+  ✓ Loaded on core 10
+  ✓ Loaded on core 11
+  ✓ Loaded on core 12
+  ✓ Loaded on core 13
+  ✓ Loaded on core 14
+  ✓ Loaded on core 15
+  ✓ Loaded on core 16
+  ✓ Loaded on core 17
+  ✓ Loaded on core 18
+  ✓ Loaded on core 19
+  ✓ Loaded on core 20
+  ✓ Loaded on core 21
+  ✓ Loaded on core 22
+  ✓ Loaded on core 23
+  ✓ Loaded on core 24
+  ✓ Loaded on core 25
+  ✓ Loaded on core 26
+  ✓ Loaded on core 27
+  ✓ Loaded on core 28
+  ✓ Loaded on core 29
+  ✓ Loaded on core 30
+  ✓ Loaded on core 31
+  ✓ Loaded on core 32
+  ✓ Loaded on core 33
+  ✓ Loaded on core 34
+  ✓ Loaded on core 35
+  ✓ Loaded on core 36
+  ✓ Loaded on core 37
+  ✓ Loaded on core 38
+  ✓ Loaded on core 39
+  ✓ Loaded on core 40
+  ✓ Loaded on core 41
+  ✓ Loaded on core 42
+  ✓ Loaded on core 43
+  ✓ Loaded on core 44
+  ✓ Loaded on core 45
+  ✓ Loaded on core 46
+  ✓ Loaded on core 47
+  ✓ Loaded on core 48
+  ✓ Loaded on core 49
+  ✓ Loaded on core 50
+  ✓ Loaded on core 51
+  ✓ Loaded on core 52
+  ✓ Loaded on core 53
+  ✓ Loaded on core 54
+  ✓ Loaded on core 55
+  ✓ Loaded on core 56
+  ✓ Loaded on core 57
+  ✓ Loaded on core 58
+  ✓ Loaded on core 59
+  ✓ Loaded on core 60
+  ✓ Loaded on core 61
+  ✓ Loaded on core 62
+  ✓ Loaded on core 63
+
+[3/4] Allocating tensors per core...
+  ✓ Allocated tensors on 64 cores
+
+[4/4] Benchmarking (all cores in parallel)...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Cores:                 64
+  Wall time / iter:      6.269 ms
+  Core 0 total (10 iters): 44.67 ms
+  Core 1 total (10 iters): 51.23 ms
+  Core 2 total (10 iters): 55.89 ms
+  Core 3 total (10 iters): 47.23 ms
+  Core 4 total (10 iters): 40.27 ms
+  Core 5 total (10 iters): 49.74 ms
+  Core 6 total (10 iters): 40.53 ms
+  Core 7 total (10 iters): 52.64 ms
+  Core 8 total (10 iters): 60.30 ms
+  Core 9 total (10 iters): 45.87 ms
+  Core 10 total (10 iters): 41.98 ms
+  Core 11 total (10 iters): 43.73 ms
+  Core 12 total (10 iters): 58.36 ms
+  Core 13 total (10 iters): 55.59 ms
+  Core 14 total (10 iters): 50.18 ms
+  Core 15 total (10 iters): 44.65 ms
+  Core 16 total (10 iters): 40.32 ms
+  Core 17 total (10 iters): 51.84 ms
+  Core 18 total (10 iters): 45.70 ms
+  Core 19 total (10 iters): 48.49 ms
+  Core 20 total (10 iters): 37.84 ms
+  Core 21 total (10 iters): 41.11 ms
+  Core 22 total (10 iters): 44.84 ms
+  Core 23 total (10 iters): 36.51 ms
+  Core 24 total (10 iters): 62.69 ms
+  Core 25 total (10 iters): 51.18 ms
+  Core 26 total (10 iters): 60.14 ms
+  Core 27 total (10 iters): 40.36 ms
+  Core 28 total (10 iters): 45.29 ms
+  Core 29 total (10 iters): 32.47 ms
+  Core 30 total (10 iters): 57.81 ms
+  Core 31 total (10 iters): 32.30 ms
+  Core 32 total (10 iters): 44.97 ms
+  Core 33 total (10 iters): 49.77 ms
+  Core 34 total (10 iters): 52.51 ms
+  Core 35 total (10 iters): 44.56 ms
+  Core 36 total (10 iters): 47.97 ms
+  Core 37 total (10 iters): 61.28 ms
+  Core 38 total (10 iters): 36.63 ms
+  Core 39 total (10 iters): 58.25 ms
+  Core 40 total (10 iters): 41.11 ms
+  Core 41 total (10 iters): 33.18 ms
+  Core 42 total (10 iters): 53.91 ms
+  Core 43 total (10 iters): 28.07 ms
+  Core 44 total (10 iters): 31.86 ms
+  Core 45 total (10 iters): 61.71 ms
+  Core 46 total (10 iters): 58.94 ms
+  Core 47 total (10 iters): 57.01 ms
+  Core 48 total (10 iters): 48.83 ms
+  Core 49 total (10 iters): 51.80 ms
+  Core 50 total (10 iters): 55.25 ms
+  Core 51 total (10 iters): 58.85 ms
+  Core 52 total (10 iters): 49.07 ms
+  Core 53 total (10 iters): 35.37 ms
+  Core 54 total (10 iters): 58.85 ms
+  Core 55 total (10 iters): 36.64 ms
+  Core 56 total (10 iters): 52.39 ms
+  Core 57 total (10 iters): 53.65 ms
+  Core 58 total (10 iters): 55.61 ms
+  Core 59 total (10 iters): 36.25 ms
+  Core 60 total (10 iters): 51.43 ms
+  Core 61 total (10 iters): 47.98 ms
+  Core 62 total (10 iters): 44.22 ms
+  Core 63 total (10 iters): 48.37 ms
+  ─────────────────────────────────────
+  Aggregate throughput:  1403.04 TFLOPS
+  Aggregate memory BW:   513.81 GB/s
+  Per-core throughput:   21.92 TFLOPS
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================

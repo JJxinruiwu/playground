@@ -1,0 +1,164 @@
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_multicore.py 
+================================================================================
+Multi-Core Matrix Multiplication (Data Parallel)
+================================================================================
+
+Configuration:
+  Matrix size:  4096x4096
+  Num cores:    64
+  Data type:    float8_e5m2
+  Warmup iter:  5
+  Bench iter:   10
+
+[1/4] Compiling kernel (once)...
+2026-Mar-06 08:24:23.419426 29265:29265 ERROR   NRT:nrt_config_parse_init_config            Warning: Setting NEURON_RT_ASYNC_EXEC_MAX_INFLIGHT_REQUESTS > 63 is not supported. Continuing execution by setting it to 63.
+  ✓ Compiled in 10.83s  →  /tmp/build/simple_kernel_e9f35fbe5f58/simple_kernel.neff
+
+[2/4] Loading NEFF on 64 cores...
+  ✓ Loaded on core 1
+  ✓ Loaded on core 2
+  ✓ Loaded on core 3
+  ✓ Loaded on core 4
+  ✓ Loaded on core 5
+  ✓ Loaded on core 6
+  ✓ Loaded on core 7
+  ✓ Loaded on core 8
+  ✓ Loaded on core 9
+  ✓ Loaded on core 10
+  ✓ Loaded on core 11
+  ✓ Loaded on core 12
+  ✓ Loaded on core 13
+  ✓ Loaded on core 14
+  ✓ Loaded on core 15
+  ✓ Loaded on core 16
+  ✓ Loaded on core 17
+  ✓ Loaded on core 18
+  ✓ Loaded on core 19
+  ✓ Loaded on core 20
+  ✓ Loaded on core 21
+  ✓ Loaded on core 22
+  ✓ Loaded on core 23
+  ✓ Loaded on core 24
+  ✓ Loaded on core 25
+  ✓ Loaded on core 26
+  ✓ Loaded on core 27
+  ✓ Loaded on core 28
+  ✓ Loaded on core 29
+  ✓ Loaded on core 30
+  ✓ Loaded on core 31
+  ✓ Loaded on core 32
+  ✓ Loaded on core 33
+  ✓ Loaded on core 34
+  ✓ Loaded on core 35
+  ✓ Loaded on core 36
+  ✓ Loaded on core 37
+  ✓ Loaded on core 38
+  ✓ Loaded on core 39
+  ✓ Loaded on core 40
+  ✓ Loaded on core 41
+  ✓ Loaded on core 42
+  ✓ Loaded on core 43
+  ✓ Loaded on core 44
+  ✓ Loaded on core 45
+  ✓ Loaded on core 46
+  ✓ Loaded on core 47
+  ✓ Loaded on core 48
+  ✓ Loaded on core 49
+  ✓ Loaded on core 50
+  ✓ Loaded on core 51
+  ✓ Loaded on core 52
+  ✓ Loaded on core 53
+  ✓ Loaded on core 54
+  ✓ Loaded on core 55
+  ✓ Loaded on core 56
+  ✓ Loaded on core 57
+  ✓ Loaded on core 58
+  ✓ Loaded on core 59
+  ✓ Loaded on core 60
+  ✓ Loaded on core 61
+  ✓ Loaded on core 62
+  ✓ Loaded on core 63
+
+[3/4] Allocating tensors per core...
+  ✓ Allocated tensors on 64 cores
+
+[4/4] Benchmarking (all cores in parallel)...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Cores:                 64
+  Wall time / iter:      4.870 ms
+  Core 0 total (10 iters): 28.30 ms
+  Core 1 total (10 iters): 39.07 ms
+  Core 2 total (10 iters): 37.49 ms
+  Core 3 total (10 iters): 45.49 ms
+  Core 4 total (10 iters): 32.46 ms
+  Core 5 total (10 iters): 33.49 ms
+  Core 6 total (10 iters): 32.63 ms
+  Core 7 total (10 iters): 42.10 ms
+  Core 8 total (10 iters): 36.23 ms
+  Core 9 total (10 iters): 41.43 ms
+  Core 10 total (10 iters): 37.36 ms
+  Core 11 total (10 iters): 37.82 ms
+  Core 12 total (10 iters): 48.55 ms
+  Core 13 total (10 iters): 28.41 ms
+  Core 14 total (10 iters): 44.51 ms
+  Core 15 total (10 iters): 47.09 ms
+  Core 16 total (10 iters): 48.26 ms
+  Core 17 total (10 iters): 35.20 ms
+  Core 18 total (10 iters): 20.96 ms
+  Core 19 total (10 iters): 40.17 ms
+  Core 20 total (10 iters): 30.52 ms
+  Core 21 total (10 iters): 25.97 ms
+  Core 22 total (10 iters): 44.71 ms
+  Core 23 total (10 iters): 27.70 ms
+  Core 24 total (10 iters): 29.14 ms
+  Core 25 total (10 iters): 35.37 ms
+  Core 26 total (10 iters): 29.58 ms
+  Core 27 total (10 iters): 32.18 ms
+  Core 28 total (10 iters): 35.39 ms
+  Core 29 total (10 iters): 21.10 ms
+  Core 30 total (10 iters): 26.47 ms
+  Core 31 total (10 iters): 42.56 ms
+  Core 32 total (10 iters): 43.58 ms
+  Core 33 total (10 iters): 40.48 ms
+  Core 34 total (10 iters): 25.22 ms
+  Core 35 total (10 iters): 29.40 ms
+  Core 36 total (10 iters): 33.61 ms
+  Core 37 total (10 iters): 43.14 ms
+  Core 38 total (10 iters): 29.51 ms
+  Core 39 total (10 iters): 36.21 ms
+  Core 40 total (10 iters): 22.10 ms
+  Core 41 total (10 iters): 38.02 ms
+  Core 42 total (10 iters): 21.06 ms
+  Core 43 total (10 iters): 22.05 ms
+  Core 44 total (10 iters): 29.54 ms
+  Core 45 total (10 iters): 48.26 ms
+  Core 46 total (10 iters): 47.00 ms
+  Core 47 total (10 iters): 34.27 ms
+  Core 48 total (10 iters): 21.95 ms
+  Core 49 total (10 iters): 37.17 ms
+  Core 50 total (10 iters): 48.26 ms
+  Core 51 total (10 iters): 37.97 ms
+  Core 52 total (10 iters): 33.22 ms
+  Core 53 total (10 iters): 47.09 ms
+  Core 54 total (10 iters): 42.97 ms
+  Core 55 total (10 iters): 34.43 ms
+  Core 56 total (10 iters): 43.40 ms
+  Core 57 total (10 iters): 29.82 ms
+  Core 58 total (10 iters): 48.70 ms
+  Core 59 total (10 iters): 33.52 ms
+  Core 60 total (10 iters): 40.53 ms
+  Core 61 total (10 iters): 36.01 ms
+  Core 62 total (10 iters): 33.40 ms
+  Core 63 total (10 iters): 42.93 ms
+  ─────────────────────────────────────
+  Aggregate throughput:  1806.02 TFLOPS
+  Aggregate memory BW:   661.39 GB/s
+  Per-core throughput:   28.22 TFLOPS
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ 

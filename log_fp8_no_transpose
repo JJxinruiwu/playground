@@ -1,0 +1,237 @@
+
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_fp8.py 
+================================================================================
+Simple Matrix Multiplication Example
+================================================================================
+
+Configuration:
+  Matrix size: 512x512
+  Data type: float8_e5m2 (inputs + output)
+  Warmup iterations: 5
+  Benchmark iterations: 10
+
+[1/6] Creating test data...
+  ✓ Created matrices A: (512, 512), B: (512, 512)
+
+[2/6] Compiling kernel...
+  ✓ Kernel compiled in 14.01 seconds
+  ✓ Kernel name: simple_kernel
+
+[3/6] Creating device tensors...
+  ✓ Created device tensors for inputs and output
+
+[4/6] Executing kernel...
+  ✓ Kernel executed successfully
+  ✓ Output shape: (512, 512), dtype: float8_e5m2
+
+[5/6] Validating correctness...
+
+ SKIP
+
+[6/6] Benchmarking performance...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Mean time:    0.021 ms
+  Min time:     0.020 ms
+  Max time:     0.021 ms
+  Std dev:      0.000 ms
+  ─────────────────────────────────────
+  Throughput (mean): 12.98 TFLOPS
+  Throughput (peak): 13.23 TFLOPS
+  Memory BW (mean):  38.02 GB/s
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+
+
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_fp8.py 
+================================================================================
+Simple Matrix Multiplication Example
+================================================================================
+
+Configuration:
+  Matrix size: 1024x1024
+  Data type: float8_e5m2 (inputs + output)
+  Warmup iterations: 5
+  Benchmark iterations: 10
+
+[1/6] Creating test data...
+  ✓ Created matrices A: (1024, 1024), B: (1024, 1024)
+
+[2/6] Compiling kernel...
+  ✓ Kernel compiled in 11.46 seconds
+  ✓ Kernel name: simple_kernel
+
+[3/6] Creating device tensors...
+  ✓ Created device tensors for inputs and output
+
+[4/6] Executing kernel...
+  ✓ Kernel executed successfully
+  ✓ Output shape: (1024, 1024), dtype: float8_e5m2
+
+[5/6] Validating correctness...
+
+ SKIP
+
+[6/6] Benchmarking performance...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Mean time:    0.039 ms
+  Min time:     0.038 ms
+  Max time:     0.040 ms
+  Std dev:      0.001 ms
+  ─────────────────────────────────────
+  Throughput (mean): 55.20 TFLOPS
+  Throughput (peak): 57.12 TFLOPS
+  Memory BW (mean):  80.86 GB/s
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_fp8.py 
+================================================================================
+Simple Matrix Multiplication Example
+================================================================================
+
+Configuration:
+  Matrix size: 2048x2048
+  Data type: float8_e5m2 (inputs + output)
+  Warmup iterations: 5
+  Benchmark iterations: 10
+
+[1/6] Creating test data...
+  ✓ Created matrices A: (2048, 2048), B: (2048, 2048)
+
+[2/6] Compiling kernel...
+  ✓ Kernel compiled in 12.79 seconds
+  ✓ Kernel name: simple_kernel
+
+[3/6] Creating device tensors...
+  ✓ Created device tensors for inputs and output
+
+[4/6] Executing kernel...
+  ✓ Kernel executed successfully
+  ✓ Output shape: (2048, 2048), dtype: float8_e5m2
+
+[5/6] Validating correctness...
+
+ SKIP
+
+[6/6] Benchmarking performance...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Mean time:    0.147 ms
+  Min time:     0.146 ms
+  Max time:     0.148 ms
+  Std dev:      0.001 ms
+  ─────────────────────────────────────
+  Throughput (mean): 117.14 TFLOPS
+  Throughput (peak): 117.70 TFLOPS
+  Memory BW (mean):  85.79 GB/s
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+================================================================================
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_fp8.py 
+================================================================================
+Simple Matrix Multiplication Example
+================================================================================
+
+Configuration:
+  Matrix size: 4096x4096
+  Data type: float8_e5m2 (inputs + output)
+  Warmup iterations: 5
+  Benchmark iterations: 10
+
+[1/6] Creating test data...
+  ✓ Created matrices A: (4096, 4096), B: (4096, 4096)
+
+[2/6] Compiling kernel...
+  ✓ Kernel compiled in 12.61 seconds
+  ✓ Kernel name: simple_kernel
+
+[3/6] Creating device tensors...
+  ✓ Created device tensors for inputs and output
+
+[4/6] Executing kernel...
+  ✓ Kernel executed successfully
+  ✓ Output shape: (4096, 4096), dtype: float8_e5m2
+
+[5/6] Validating correctness...
+
+ SKIP
+
+[6/6] Benchmarking performance...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Mean time:    0.975 ms
+  Min time:     0.974 ms
+  Max time:     0.975 ms
+  Std dev:      0.000 ms
+  ─────────────────────────────────────
+  Throughput (mean): 140.99 TFLOPS
+  Throughput (peak): 141.06 TFLOPS
+  Memory BW (mean):  51.63 GB/s
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_fp8.py 
+================================================================================
+Simple Matrix Multiplication Example
+================================================================================
+
+Configuration:
+  Matrix size: 8192x8192
+  Data type: float8_e5m2 (inputs + output)
+  Warmup iterations: 5
+  Benchmark iterations: 10
+
+[1/6] Creating test data...
+  ✓ Created matrices A: (8192, 8192), B: (8192, 8192)
+
+[2/6] Compiling kernel...
+  ✓ Kernel compiled in 22.03 seconds
+  ✓ Kernel name: simple_kernel
+
+[3/6] Creating device tensors...
+  ✓ Created device tensors for inputs and output
+
+[4/6] Executing kernel...
+  ✓ Kernel executed successfully
+  ✓ Output shape: (8192, 8192), dtype: float8_e5m2
+
+[5/6] Validating correctness...
+
+ SKIP
+
+[6/6] Benchmarking performance...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Mean time:    8.024 ms
+  Min time:     8.020 ms
+  Max time:     8.031 ms
+  Std dev:      0.004 ms
+  ─────────────────────────────────────
+  Throughput (mean): 137.02 TFLOPS
+  Throughput (peak): 137.10 TFLOPS
+  Memory BW (mean):  25.09 GB/s
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+

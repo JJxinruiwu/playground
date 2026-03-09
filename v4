@@ -1,0 +1,105 @@
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_multicore_v4.py 
+================================================================================
+Multi-Core Matrix Multiplication v4 (v1 + kernel loop ×20)
+================================================================================
+
+Configuration:
+  Matrix size:      4096x4096
+  Num cores:        64
+  Data type:        float8_e5m2
+  Kernel loop:      20 GEMMs per dispatch
+  Warmup iter:      5
+  Bench iter:       10
+  Total GEMMs/core: 200
+
+[1/4] Compiling kernel (once)...
+  ✓ Compiled in 14.64s  →  /tmp/build/simple_kernel_loop20_71cc550f340e/simple_kernel_loop20.neff
+
+[2/4] Loading NEFF on 64 cores...
+  ✓ Loaded on all 64 cores
+
+[3/4] Allocating tensors per core...
+  ✓ Allocated tensors on 64 cores
+
+[4/4] Benchmarking (all cores in parallel)...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Cores:                 64
+  Kernel loop:           20 GEMMs/dispatch
+  Wall time / dispatch:  3.564 ms
+  Wall time / GEMM:      0.178 ms
+  Core  0 total (10 dispatches): 28.82 ms
+  Core  1 total (10 dispatches): 35.64 ms
+  Core  2 total (10 dispatches): 35.24 ms
+  Core  3 total (10 dispatches): 34.56 ms
+  Core  4 total (10 dispatches): 30.00 ms
+  Core  5 total (10 dispatches): 25.25 ms
+  Core  6 total (10 dispatches): 27.81 ms
+  Core  7 total (10 dispatches): 20.90 ms
+  Core  8 total (10 dispatches): 29.23 ms
+  Core  9 total (10 dispatches): 15.43 ms
+  Core 10 total (10 dispatches): 18.29 ms
+  Core 11 total (10 dispatches): 25.62 ms
+  Core 12 total (10 dispatches): 32.37 ms
+  Core 13 total (10 dispatches): 29.55 ms
+  Core 14 total (10 dispatches): 28.92 ms
+  Core 15 total (10 dispatches): 31.20 ms
+  Core 16 total (10 dispatches): 32.49 ms
+  Core 17 total (10 dispatches): 25.04 ms
+  Core 18 total (10 dispatches): 25.41 ms
+  Core 19 total (10 dispatches): 24.89 ms
+  Core 20 total (10 dispatches): 20.32 ms
+  Core 21 total (10 dispatches): 22.26 ms
+  Core 22 total (10 dispatches): 34.10 ms
+  Core 23 total (10 dispatches): 22.06 ms
+  Core 24 total (10 dispatches): 24.99 ms
+  Core 25 total (10 dispatches): 32.21 ms
+  Core 26 total (10 dispatches): 17.95 ms
+  Core 27 total (10 dispatches): 32.99 ms
+  Core 28 total (10 dispatches): 31.75 ms
+  Core 29 total (10 dispatches): 30.76 ms
+  Core 30 total (10 dispatches): 33.24 ms
+  Core 31 total (10 dispatches): 28.25 ms
+  Core 32 total (10 dispatches): 28.96 ms
+  Core 33 total (10 dispatches): 22.25 ms
+  Core 34 total (10 dispatches): 29.01 ms
+  Core 35 total (10 dispatches): 22.24 ms
+  Core 36 total (10 dispatches): 17.54 ms
+  Core 37 total (10 dispatches): 19.81 ms
+  Core 38 total (10 dispatches): 30.08 ms
+  Core 39 total (10 dispatches): 31.37 ms
+  Core 40 total (10 dispatches): 27.37 ms
+  Core 41 total (10 dispatches): 30.91 ms
+  Core 42 total (10 dispatches): 19.81 ms
+  Core 43 total (10 dispatches): 33.34 ms
+  Core 44 total (10 dispatches): 24.93 ms
+  Core 45 total (10 dispatches): 27.30 ms
+  Core 46 total (10 dispatches): 31.94 ms
+  Core 47 total (10 dispatches): 25.50 ms
+  Core 48 total (10 dispatches): 17.12 ms
+  Core 49 total (10 dispatches): 28.81 ms
+  Core 50 total (10 dispatches): 21.75 ms
+  Core 51 total (10 dispatches): 30.78 ms
+  Core 52 total (10 dispatches): 32.23 ms
+  Core 53 total (10 dispatches): 28.85 ms
+  Core 54 total (10 dispatches): 29.01 ms
+  Core 55 total (10 dispatches): 27.97 ms
+  Core 56 total (10 dispatches): 21.52 ms
+  Core 57 total (10 dispatches): 25.13 ms
+  Core 58 total (10 dispatches): 29.14 ms
+  Core 59 total (10 dispatches): 29.09 ms
+  Core 60 total (10 dispatches): 28.55 ms
+  Core 61 total (10 dispatches): 16.88 ms
+  Core 62 total (10 dispatches): 30.45 ms
+  Core 63 total (10 dispatches): 25.55 ms
+  ─────────────────────────────────────
+  Aggregate throughput:  49363.72 TFLOPS
+  Aggregate memory BW:   903.88 GB/s
+  Per-core throughput:   771.31 TFLOPS
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ 

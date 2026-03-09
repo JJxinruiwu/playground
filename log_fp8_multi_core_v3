@@ -1,0 +1,101 @@
+(nkipy-workspace) ubuntu@ip-172-31-23-240:~/nkipy$ python examples/playground/simple_nkipy_kernel_multicore_v3.py 
+================================================================================
+Multi-Core Matrix Multiplication v3 (v1 + NUMA pinning)
+================================================================================
+
+Configuration:
+  Matrix size:  4096x4096
+  Num cores:    64
+  Data type:    float8_e5m2
+  Warmup iter:  5
+  Bench iter:   10
+  NUMA pinning: enabled
+
+[1/4] Compiling kernel (once)...
+  ✓ Compiled in 14.45s  →  /tmp/build/simple_kernel_5257541f9434/simple_kernel.neff
+
+[2/4] Loading NEFF on 64 cores...
+  ✓ Loaded on all 64 cores
+
+[3/4] Allocating tensors per core...
+  ✓ Allocated tensors on 64 cores
+
+[4/4] Benchmarking (all cores in parallel, NUMA-pinned)...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Cores:                 64
+  Wall time / iter:      6.147 ms
+  Core  0 [NUMA 1] total (10 iters): 51.22 ms
+  Core  1 [NUMA 1] total (10 iters): 20.44 ms
+  Core  2 [NUMA 1] total (10 iters): 56.64 ms
+  Core  3 [NUMA 1] total (10 iters): 42.67 ms
+  Core  4 [NUMA 1] total (10 iters): 52.36 ms
+  Core  5 [NUMA 1] total (10 iters): 29.09 ms
+  Core  6 [NUMA 1] total (10 iters): 57.16 ms
+  Core  7 [NUMA 1] total (10 iters): 46.89 ms
+  Core  8 [NUMA 1] total (10 iters): 25.67 ms
+  Core  9 [NUMA 1] total (10 iters): 46.28 ms
+  Core 10 [NUMA 1] total (10 iters): 37.71 ms
+  Core 11 [NUMA 1] total (10 iters): 49.40 ms
+  Core 12 [NUMA 1] total (10 iters): 54.08 ms
+  Core 13 [NUMA 1] total (10 iters): 40.36 ms
+  Core 14 [NUMA 1] total (10 iters): 25.68 ms
+  Core 15 [NUMA 1] total (10 iters): 38.23 ms
+  Core 16 [NUMA 0] total (10 iters): 29.11 ms
+  Core 17 [NUMA 0] total (10 iters): 38.02 ms
+  Core 18 [NUMA 0] total (10 iters): 42.04 ms
+  Core 19 [NUMA 0] total (10 iters): 47.43 ms
+  Core 20 [NUMA 0] total (10 iters): 41.61 ms
+  Core 21 [NUMA 0] total (10 iters): 47.44 ms
+  Core 22 [NUMA 0] total (10 iters): 57.56 ms
+  Core 23 [NUMA 0] total (10 iters): 51.28 ms
+  Core 24 [NUMA 0] total (10 iters): 61.47 ms
+  Core 25 [NUMA 0] total (10 iters): 33.83 ms
+  Core 26 [NUMA 0] total (10 iters): 41.46 ms
+  Core 27 [NUMA 0] total (10 iters): 57.56 ms
+  Core 28 [NUMA 0] total (10 iters): 30.05 ms
+  Core 29 [NUMA 0] total (10 iters): 31.75 ms
+  Core 30 [NUMA 0] total (10 iters): 29.61 ms
+  Core 31 [NUMA 0] total (10 iters): 34.45 ms
+  Core 32 [NUMA 0] total (10 iters): 30.00 ms
+  Core 33 [NUMA 0] total (10 iters): 15.91 ms
+  Core 34 [NUMA 0] total (10 iters): 50.27 ms
+  Core 35 [NUMA 0] total (10 iters): 29.82 ms
+  Core 36 [NUMA 0] total (10 iters): 53.15 ms
+  Core 37 [NUMA 0] total (10 iters): 36.49 ms
+  Core 38 [NUMA 0] total (10 iters): 54.47 ms
+  Core 39 [NUMA 0] total (10 iters): 47.89 ms
+  Core 40 [NUMA 0] total (10 iters): 58.34 ms
+  Core 41 [NUMA 0] total (10 iters): 25.52 ms
+  Core 42 [NUMA 0] total (10 iters): 51.72 ms
+  Core 43 [NUMA 0] total (10 iters): 58.80 ms
+  Core 44 [NUMA 0] total (10 iters): 48.79 ms
+  Core 45 [NUMA 0] total (10 iters): 25.12 ms
+  Core 46 [NUMA 0] total (10 iters): 60.49 ms
+  Core 47 [NUMA 0] total (10 iters): 44.63 ms
+  Core 48 [NUMA 1] total (10 iters): 43.36 ms
+  Core 49 [NUMA 1] total (10 iters): 44.75 ms
+  Core 50 [NUMA 1] total (10 iters): 37.23 ms
+  Core 51 [NUMA 1] total (10 iters): 55.46 ms
+  Core 52 [NUMA 1] total (10 iters): 41.80 ms
+  Core 53 [NUMA 1] total (10 iters): 45.75 ms
+  Core 54 [NUMA 1] total (10 iters): 35.27 ms
+  Core 55 [NUMA 1] total (10 iters): 49.54 ms
+  Core 56 [NUMA 1] total (10 iters): 40.96 ms
+  Core 57 [NUMA 1] total (10 iters): 32.74 ms
+  Core 58 [NUMA 1] total (10 iters): 25.43 ms
+  Core 59 [NUMA 1] total (10 iters): 35.11 ms
+  Core 60 [NUMA 1] total (10 iters): 35.38 ms
+  Core 61 [NUMA 1] total (10 iters): 37.85 ms
+  Core 62 [NUMA 1] total (10 iters): 38.23 ms
+  Core 63 [NUMA 1] total (10 iters): 45.15 ms
+  ─────────────────────────────────────
+  Aggregate throughput:  1431.06 TFLOPS
+  Aggregate memory BW:   524.07 GB/s
+  Per-core throughput:   22.36 TFLOPS
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
