@@ -39,6 +39,9 @@ def run_on_core(model, inputs, outputs, barrier, results, core_idx, iterations):
     start = time.perf_counter()
     for _ in range(iterations):
         model(inputs=inputs, outputs=outputs)
+    # Force device sync: read output back to host so we wait for all
+    # queued async work to complete before stopping the timer.
+    outputs["output0"].numpy()
     elapsed_ms = (time.perf_counter() - start) * 1000.0
     results[core_idx] = elapsed_ms
 
