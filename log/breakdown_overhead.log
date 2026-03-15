@@ -1,0 +1,128 @@
+================================================================================
+  End-to-End Time Breakdown
+  4096x4096 FP8 GEMM — identifying where overhead lives
+================================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Scenario: 1core×1GEMM
+  1 core(s), 1 GEMM(s)/dispatch, 4096x4096 FP8
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [Phase 1] Compilation...
+    → 13605.7 ms
+  [Phase 2] NEFF Load (1 core(s))...
+    → 0.0 ms
+  [Phase 3] H2D Transfer (1 core(s))...
+    → 494.2 ms total (494.20 ms/core)
+      33.6 MB/core, effective BW: 0.1 GB/s
+  [Phase 4] Dispatch + Execute (20 iterations)...
+    Host time / dispatch:     0.909 ms
+    Device time / dispatch:   0.975 ms
+    Dispatch overhead:        -0.066 ms (-7.3% of host time)
+  [Phase 5] D2H Transfer (1 core(s))...
+    → 15.0 ms total (14.98 ms/core)
+      16.8 MB/core, effective BW: 1.1 GB/s
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Scenario: 64core×1GEMM
+  64 core(s), 1 GEMM(s)/dispatch, 4096x4096 FP8
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [Phase 1] Compilation...
+    → 0.8 ms
+  [Phase 2] NEFF Load (64 core(s))...
+    → 336.0 ms
+  [Phase 3] H2D Transfer (64 core(s))...
+    → 29794.9 ms total (465.54 ms/core)
+      33.6 MB/core, effective BW: 0.1 GB/s
+  [Phase 4] Dispatch + Execute (20 iterations)...
+    Host time / dispatch:     3.559 ms
+    Device time / dispatch:   0.975 ms
+    Dispatch overhead:        2.584 ms (72.6% of host time)
+  [Phase 5] D2H Transfer (64 core(s))...
+    → 499.9 ms total (7.81 ms/core)
+      16.8 MB/core, effective BW: 2.1 GB/s
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Scenario: 64core×20GEMM
+  64 core(s), 20 GEMM(s)/dispatch, 4096x4096 FP8
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [Phase 1] Compilation...
+    → 28899.9 ms
+  [Phase 2] NEFF Load (64 core(s))...
+    → 4587.3 ms
+  [Phase 3] H2D Transfer (64 core(s))...
+    → 642649.8 ms total (10041.40 ms/core)
+      671.1 MB/core, effective BW: 0.1 GB/s
+  [Phase 4] Dispatch + Execute (20 iterations)...
+    Host time / dispatch:     18.512 ms
+    Device time / dispatch:   19.128 ms
+    Dispatch overhead:        -0.616 ms (-3.3% of host time)
+    ── Per GEMM ──
+    Host time / GEMM:         0.9256 ms
+    Device time / GEMM:       0.9564 ms
+    Dispatch overhead / GEMM: -0.0308 ms
+  [Phase 5] D2H Transfer (64 core(s))...
+    → 22462.7 ms total (350.98 ms/core)
+      335.5 MB/core, effective BW: 1.0 GB/s
+
+================================================================================
+  END-TO-END BREAKDOWN SUMMARY
+================================================================================
+
+  Phase                              1core×1GEMM      64core×1GEMM     64core×20GEMM
+  ──────────────────────────────────────────────────────────────────────────────────
+  [One-time costs]
+  Compilation                         13605.7 ms            0.8 ms        28899.9 ms
+  NEFF Load                               0.0 ms          336.0 ms         4587.3 ms
+  [Per-dispatch costs]
+  H2D Transfer (total)                494.203 ms      29794.880 ms     642649.799 ms
+  Host Dispatch+Exec                    0.909 ms          3.559 ms         18.512 ms
+    └ Device Execution                  0.975 ms          0.975 ms         19.128 ms
+    └ Dispatch Overhead                -0.066 ms          2.584 ms         -0.616 ms
+  D2H Transfer (total)                 14.983 ms        499.898 ms      22462.669 ms
+  [Per-GEMM costs]
+  Host time / GEMM                     0.9087 ms         3.5586 ms         0.9256 ms
+  Device time / GEMM                   0.9747 ms         0.9745 ms         0.9564 ms
+  Dispatch OH / GEMM                  -0.0660 ms         2.5841 ms        -0.0308 ms
+  [Derived metrics]
+  Device TFLOPS/core                   141.00            141.03            143.70   
+  Host TFLOPS/core                     151.25             38.62            148.49   
+  Agg Device TFLOPS                     141.0            9026.0            9197.1   
+  Agg Host TFLOPS                       151.2            2471.8            9503.1   
+  Dispatch OH %                          -7.3 %             72.6 %             -3.3 %  
+
+  ────────────────────────────────────────────────────────────
+  BOTTLENECK ANALYSIS
+  ────────────────────────────────────────────────────────────
+
+  1core×1GEMM:
+    Total per-dispatch wall time: 510.094 ms
+    Breakdown:
+      H2D               494.203 ms  ( 96.9%)  ████████████████████████████████████████████████
+      Dispatch OH        -0.066 ms  ( -0.0%)  
+      Device Exec         0.975 ms  (  0.2%)  
+      D2H                14.983 ms  (  2.9%)  █
+    → Bottleneck: H2D (494.203 ms)
+
+  64core×1GEMM:
+    Total per-dispatch wall time: 30298.336 ms
+    Breakdown:
+      H2D              29794.880 ms  ( 98.3%)  █████████████████████████████████████████████████
+      Dispatch OH         2.584 ms  (  0.0%)  
+      Device Exec         0.975 ms  (  0.0%)  
+      D2H               499.898 ms  (  1.6%)  
+    → Bottleneck: H2D (29794.880 ms)
+
+  64core×20GEMM:
+    Total per-dispatch wall time: 665130.980 ms
+    Breakdown:
+      H2D              642649.799 ms  ( 96.6%)  ████████████████████████████████████████████████
+      Dispatch OH        -0.616 ms  ( -0.0%)  
+      Device Exec        19.128 ms  (  0.0%)  
+      D2H              22462.669 ms  (  3.4%)  █
+    → Bottleneck: H2D (642649.799 ms)
+
+================================================================================
+
