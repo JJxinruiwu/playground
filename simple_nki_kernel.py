@@ -13,7 +13,7 @@ from nkipy.core import nki_op  # noqa: F401, make sure monkey patch is applied
 from nkipy.runtime import DeviceKernel, DeviceTensor
 
 
-@nki.jit(platform_target="trn2")
+@nki.jit
 def nki_tensor_add(a_input, b_input):
     a_tile = sbuf.view(dtype=a_input.dtype, shape=a_input.shape)  # noqa: F821
     nisa.dma_copy(dst=a_tile, src=a_input)

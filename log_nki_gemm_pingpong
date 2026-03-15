@@ -1,55 +1,51 @@
 /home/ubuntu/nkipy/.venv/lib/python3.12/site-packages/nki/compiler/backends/neuron/TraceKernel.py:98: UserWarning: Setting the platform_target on the kernel is deprecated. Please set the environment variable NEURON_PLATFORM_TARGET_OVERRIDE.
   warnings.warn(
 ================================================================================
-NKI Ping-Pong Tiled GEMM Benchmark (DMA/Compute Overlap)
+NKI Ping-Pong Tiled GEMM Benchmark (C = A.T @ B, fp8 in/out, no pre-transpose)
 ================================================================================
 
 Configuration:
-  Matrix size:  4096×4096 @ 4096×4096
-  Data type:    float8_e5m2 (inputs) → float32 (output)
+  Matrix size:  A(4096,4096) @ B(4096,4096) → C(4096,4096)
+  Operation:    C = A.T @ B
+  Data type:    float8_e5m2 (inputs & output)
   Tile dims:    M_TILE=128, K_TILE=128, N_TILE=512
-  K tiles:      32  (double-buffered)
+  M tiles:      32  (contraction, double-buffered)
   Optimization: DMA/matmul overlap via ping-pong SBUF buffers
   Warmup iter:  5
   Bench iter:   10
 
 [1/6] Creating test data...
-  A: (4096, 4096) float8_e5m2, A_T: (4096, 4096), B: (4096, 4096) float8_e5m2
+  A: (4096, 4096) float8_e5m2, B: (4096, 4096) float8_e5m2
 
 [2/6] Compiling NKI ping-pong GEMM kernel...
-The Python AST is located at: /tmp/klir_binaries/nki_gemm_pingpong_slyix9jr/nki_gemm_pingpongmkoukqow_python_ast.klir
-The KLR format is located at: final_klir_filepath='/tmp/klir_binaries/nki_gemm_pingpong_slyix9jr/nki_gemm_pingpongfpajmkjw.klir'
+The Python AST is located at: /tmp/klir_binaries/nki_gemm_pingpong_4_y5m1zj/nki_gemm_pingpongh475xcb7_python_ast.klir
+The KLR format is located at: final_klir_filepath='/tmp/klir_binaries/nki_gemm_pingpong_4_y5m1zj/nki_gemm_pingpongbc6vwtmn.klir'
 =========== warnings from kernel tracing __main__.nki_gemm_pingpong =========== 
 =========== messages from kernel tracing __main__.nki_gemm_pingpong =========== 
 =========== errors from kernel tracing __main__.nki_gemm_pingpong =========== 
-  Compiled in 24.91s  →  /tmp/build/nki_gemm_pingpong_19c99ab21843/nki_gemm_pingpong.neff
+  Compiled in 23.86s  →  /tmp/build/nki_gemm_pingpong_atb_fp8_5b896735b207/nki_gemm_pingpong_atb_fp8.neff
 
 [3/6] Creating device tensors...
   Device tensors allocated
 
 [4/6] Executing kernel + validating against NumPy reference...
-  Passes tolerance (rtol=1e-1, atol=1e-1)
-  Max abs error: 0.0000,  Mean abs error: 0.0000
+  Max abs error: 4.0000,  Mean abs error: 0.0000
 
 [5/6] Generating NTFF profile trace...
-  (Compare per-K-tile execution time vs nki_gemm_tiled.py to confirm overlap)
-  Profile saved alongside /tmp/build/nki_gemm_pingpong_19c99ab21843/nki_gemm_pingpong.neff
+  Profile saved alongside /tmp/build/nki_gemm_pingpong_atb_fp8_5b896735b207/nki_gemm_pingpong_atb_fp8.neff
 
 [6/6] Benchmarking...
 
   Performance Results:
   ─────────────────────────────────────
-  Mean time:         12.842 ms
-  Min  time:         12.834 ms
-  Max  time:         12.852 ms
+  Mean time:         12.837 ms
+  Min  time:         12.824 ms
+  Max  time:         12.849 ms
   Std dev:           0.007 ms
   ─────────────────────────────────────
-  Throughput (mean): 10.70 TFLOPS
-  Throughput (peak): 10.71 TFLOPS
-  Memory BW (mean):  7.84 GB/s
-  ─────────────────────────────────────
-  To see DMA/compute overlap: load the NTFF trace in Neuron Profiler
-  and compare DMA vs MXU timeline against nki_gemm_tiled.py trace.
+  Throughput (mean): 10.71 TFLOPS
+  Throughput (peak): 10.72 TFLOPS
+  Memory BW (mean):  3.92 GB/s
   ─────────────────────────────────────
 
 ================================================================================

@@ -1,0 +1,83 @@
+2026-Mar-15 06:27:11.0488 145584:145729 [0] int nccl_net_ofi_create_plugin(nccl_net_ofi_plugin_t**):219 CCOM WARN NET/OFI Failed to initialize rdma protocol
+2026-Mar-15 06:27:11.0491 145584:145729 [0] int nccl_net_ofi_create_plugin(nccl_net_ofi_plugin_t**):354 CCOM WARN NET/OFI aws-ofi-nccl initialization failed
+2026-Mar-15 06:27:11.0493 145584:145729 [0] ncclResult_t nccl_net_ofi_init_no_atexit_fini_v6(ncclDebugLogger_t):183 CCOM WARN NET/OFI Initializing plugin failed
+2026-Mar-15 06:27:11.0495 145584:145729 [0] net_plugin.cc:97 CCOM WARN OFI plugin initNet() failed is EFA enabled?
+================================================================================
+  Tensor Parallel GEMM Benchmark
+  GEMM: (4096,4096) x (4096,4096) fp8
+  TP degree: 4
+  Sync: ASYNC_INFLIGHT=1
+================================================================================
+
+────────────────────────────────────────────────────────────
+  Data Parallel: 4 cores, each does 4096x4096 @ 4096x4096
+────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────
+  Column-Parallel TP: 4 cores
+  Each rank: A (4096,4096) @ B_shard (4096,1024) → all_gather → C (4096,4096)
+────────────────────────────────────────────────────────────
+  Using cached: /tmp/build/tp_gemm/col_par_gemm_7cd1d7d41743/col_par_gemm.neff
+
+────────────────────────────────────────────────────────────
+  Row-Parallel TP: 4 cores
+  Each rank: A_shard (4096,1024) @ B_shard (1024,4096) → all_reduce → C (4096,4096)
+────────────────────────────────────────────────────────────
+  Compiling row_par_gemm...
+  Compiled in 1.6s
+
+
+================================================================================
+  TENSOR PARALLEL GEMM COMPARISON
+  GEMM: (4096,4096) x (4096,4096) fp8, TP degree = 4
+================================================================================
+
+  Data Parallel (4 cores):
+    Host time / dispatch:     0.841 ms  (mean)
+                              0.095 ms  (min)
+                              1.112 ms  (max)
+                              0.312 ms  (std)
+    Device time / dispatch:   0.974 ms  (mean)
+    Per-core throughput:      163.39 TFLOPS
+    Aggregate throughput:     653.58 TFLOPS (4 cores)
+
+  Column-Parallel TP (4 cores):
+    Host time / dispatch:     0.508 ms  (mean)
+                              0.124 ms  (min)
+                              0.657 ms  (max)
+                              0.138 ms  (std)
+    Device time / dispatch:   0.560 ms  (mean)
+    GEMM latency:            0.508 ms
+    Throughput:              270.56 TFLOPS (4 cores)
+
+  Row-Parallel TP (4 cores):
+    Host time / dispatch:     0.421 ms  (mean)
+                              0.201 ms  (min)
+                              0.646 ms  (max)
+                              0.105 ms  (std)
+    Device time / dispatch:   0.468 ms  (mean)
+    GEMM latency:            0.421 ms
+    Throughput:              326.63 TFLOPS (4 cores)
+
+  ────────────────────────────────────────────────────────────
+  Summary:
+  ────────────────────────────────────────────────────────────
+  Method                    Cores   Latency (ms)     TFLOPS
+  ────────────────────────────────────────────────────────────
+  Data Parallel                 4          0.841     653.58
+  Column-Parallel TP            4          0.508     270.56
+  Row-Parallel TP               4          0.421     326.63
+  ────────────────────────────────────────────────────────────
+
+  Column-Parallel TP:
+    Latency speedup vs 1-core DP: 1.66x
+    Ideal speedup (4-way TP):     4.00x
+    TP efficiency:                41.4%
+
+  Row-Parallel TP:
+    Latency speedup vs 1-core DP: 2.00x
+    Ideal speedup (4-way TP):     4.00x
+    TP efficiency:                50.0%
+
+================================================================================
+

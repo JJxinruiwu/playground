@@ -1,0 +1,66 @@
+================================================================================
+NKI Tiled GEMM v3b (PSUM accumulation, C = A.T @ B, fp8)
+================================================================================
+
+Configuration:
+  Matrix size:  A(4096,4096) @ B(4096,4096) → C(4096,4096)
+  Operation:    C = A.T @ B
+  Data type:    float8_e5m2 (inputs & output)
+  Tile dims:    M_TILE=128, K_TILE=128, N_TILE=512
+  Inner loop:   32 m-tiles × 8 n-tiles = 256 matmuls/k-tile
+  Accumulate:   PSUM += (no tensor_tensor in inner loop)
+  A reuse:      each A tile used 8x (across n-tiles)
+  DMA loads:    A=1024 (was 8192), B=8192 (was 8192)
+  Warmup iter:  5
+  Bench iter:   10
+
+[1/6] Creating test data...
+  A: (4096, 4096) float8_e5m2, B: (4096, 4096) float8_e5m2
+
+[2/6] Compiling NKI PSUM-accum GEMM v3b kernel...
+The Python AST is located at: /tmp/klir_binaries/nki_gemm_psum_o80o4v_5/nki_gemm_psumy5gk01pf_python_ast.klir
+The KLR format is located at: final_klir_filepath='/tmp/klir_binaries/nki_gemm_psum_o80o4v_5/nki_gemm_psumgpewte8j.klir'
+=========== warnings from kernel tracing  =========== 
+/home/ubuntu/playground/nki_gemm_pingpong.py:35:4:Mutating assignment (a[...] = foo(...)) form is deprecated. Use foo(..., dst=a[...]) instead
+=========== messages from kernel tracing  =========== 
+=========== errors from kernel tracing  =========== 
+
+/home/ubuntu/playground/nki_gemm_pingpong.py:75:
+                partial = nisa.nc_matmul(a_sbuf, b_sbuf)
+                          ^-- partial not found!
+Traceback (most recent call last):
+  File "/home/ubuntu/playground/nki_gemm_pingpong.py", line 214, in <module>
+    main()
+  File "/home/ubuntu/playground/nki_gemm_pingpong.py", line 137, in main
+    kernel = DeviceKernel.compile_and_load(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/nkipy/nkipy/src/nkipy/runtime/device_kernel.py", line 124, in compile_and_load
+    neff_path, cache_key = cls._trace_and_compile(
+                           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/nkipy/nkipy/src/nkipy/runtime/device_kernel.py", line 198, in _trace_and_compile
+    traced_kernel.specialize(*numpy_args, **numpy_kwargs)
+  File "/home/ubuntu/nkipy/nkipy/src/nkipy/core/trace.py", line 67, in specialize
+    return self._specialize_hlo(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/nkipy/nkipy/src/nkipy/core/trace.py", line 140, in _specialize_hlo
+    ret = self.func(*converted_args, **converted_kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/playground/nki_gemm_pingpong.py", line 96, in nkipy_wrapper
+    return nki_gemm_psum(A, B)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/nkipy/nkipy/src/nkipy/core/nki_op.py", line 270, in _patched_beta2_generic_kernel_call
+    return _generate_nki_custom_call(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/nkipy/nkipy/src/nkipy/core/nki_op.py", line 236, in _generate_nki_custom_call
+    config = kernel.dump_config_with_boundargs(boundargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/nkipy/.venv/lib/python3.12/site-packages/nki/compiler/backends/neuron/FrameworkKernel.py", line 264, in dump_config_with_boundargs
+    _, klir_binary, metadata = self.specialize_and_call(boundargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/nkipy/.venv/lib/python3.12/site-packages/nki/compiler/backends/neuron/TraceKernel.py", line 315, in specialize_and_call
+    raise Exception("Error(s) during tracing" + rv)
+Exception: Error(s) during tracing
+/home/ubuntu/playground/nki_gemm_pingpong.py:75:
+                partial = nisa.nc_matmul(a_sbuf, b_sbuf)
+                          ^-- partial not found!
+

@@ -1,0 +1,151 @@
+================================================================================
+  Dispatch Overhead Comparison: v1 vs v4
+  4096x4096 fp8 GEMM on 64 cores
+  Sync: NEURON_RT_ASYNC_EXEC_MAX_INFLIGHT_REQUESTS=1
+================================================================================
+
+────────────────────────────────────────────────────────────
+  Running: v1_1GEMMperDispatch
+  Input shape: (4096, 4096), dispatches/core: 10
+  Sync method: ASYNC_INFLIGHT=1 (no D2H overhead)
+────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────
+  Running: v4_20GEMMperDispatch
+  Input shape: (20, 4096, 4096), dispatches/core: 10
+  Sync method: ASYNC_INFLIGHT=1 (no D2H overhead)
+────────────────────────────────────────────────────────────
+
+
+================================================================================
+  DISPATCH OVERHEAD COMPARISON: v1 (1/dispatch) vs v4 (20/dispatch)
+  Sync method: ASYNC_INFLIGHT=1 (model() blocks, no D2H)
+================================================================================
+
+╔══════════════════════════════════════════════════════════════════╗
+║  METHOD 1: Host Wall Time (ASYNC_INFLIGHT=1, no D2H)           ║
+╚══════════════════════════════════════════════════════════════════╝
+
+  [1a] Per-Dispatch Host Wall Time
+  ──────────────────────────────────────────────────
+
+  v1_1GEMMperDispatch:
+    GEMMs per dispatch:       1
+    Host time / dispatch:
+      mean:  3.579 ms
+      min:   0.040 ms
+      max:   20.031 ms
+      std:   3.694 ms
+      p50:   3.775 ms
+      p95:   11.539 ms
+    Host time / GEMM:         3.5795 ms
+
+  v4_20GEMMperDispatch:
+    GEMMs per dispatch:       20
+    Host time / dispatch:
+      mean:  16.999 ms
+      min:   0.067 ms
+      max:   19.746 ms
+      std:   5.245 ms
+      p50:   19.089 ms
+      p95:   19.208 ms
+    Host time / GEMM:         0.8500 ms
+
+  [1b] Device Execution Time (pure compute, should be ~equal)
+  ──────────────────────────────────────────────────
+
+  v1_1GEMMperDispatch:
+    Captured executions:      640
+    Device time / dispatch:   0.975 ms  (mean)
+    Device time / GEMM:       0.9745 ms
+
+  v4_20GEMMperDispatch:
+    Captured executions:      650
+    Device time / dispatch:   19.096 ms  (mean)
+    Device time / GEMM:       0.9548 ms
+
+  [1c] Dispatch Overhead = Host Time - Device Time
+  ──────────────────────────────────────────────────
+
+  v1_1GEMMperDispatch:
+    Host time / dispatch:        3.579 ms
+    Device time / dispatch:      0.975 ms
+    Overhead / dispatch:          2.605 ms  (72.8% of host time)
+    Overhead / GEMM:              2.6049 ms
+
+  v4_20GEMMperDispatch:
+    Host time / dispatch:        16.999 ms
+    Device time / dispatch:      19.096 ms
+    Overhead / dispatch:          -2.096 ms  (-12.3% of host time)
+    Overhead / GEMM:              -0.1048 ms
+
+╔══════════════════════════════════════════════════════════════════╗
+║  METHOD 2: Device Trace — Inter-Execution Gaps & Utilization    ║
+║  (purely device-side, independent validation of Method 1)       ║
+╚══════════════════════════════════════════════════════════════════╝
+
+  [2a] Inter-Execution Gaps (device idle between dispatches)
+  ──────────────────────────────────────────────────
+  v1: gap after every GEMM (host round-trip)
+  v4: gap only after every 20 GEMMs (batch boundary)
+
+  v1_1GEMMperDispatch:
+    Total gaps:            464  (7 per core)
+    Mean gap:              7.808 ms
+    Median gap:            0.720 ms
+    Min gap:               0.001 ms
+    Max gap:               949.687 ms
+    Total gap time:        3623.0 ms (sum across all cores)
+
+  v4_20GEMMperDispatch:
+    Total gaps:            5  (0 per core)
+    Mean gap:              252.769 ms
+    Median gap:            81.271 ms
+    Min gap:               11.159 ms
+    Max gap:               804.619 ms
+    Total gap time:        1263.8 ms (sum across all cores)
+
+  [2b] Device Utilization (busy / total span, per core)
+  ──────────────────────────────────────────────────
+
+  v1_1GEMMperDispatch:
+    Mean utilization:      15.0%
+    Min utilization:       15.0%
+    Max utilization:       15.0%
+    Std:                   0.0%
+
+  v4_20GEMMperDispatch:
+    Mean utilization:      288.1%
+    Min utilization:       288.1%
+    Max utilization:       288.1%
+    Std:                   0.0%
+
+================================================================================
+  SUMMARY
+================================================================================
+
+  ┌──────────────────────────┬──────────────────┬──────────────────┐
+  │                          │ v1 (1 GEMM/disp) │ v4 (20 GEMM/disp)│
+  ├──────────────────────────┼──────────────────┼──────────────────┤
+  │ Host time / GEMM         │       3.5795 ms   │       0.8500 ms   │
+  │ Device time / GEMM       │       0.9745 ms   │       0.9548 ms   │
+  │ Overhead / GEMM          │       2.6049 ms   │      -0.1048 ms   │
+  │ Overhead / dispatch      │       2.6049 ms   │      -2.0964 ms   │
+  │ Device utilization       │         15.0 %    │        288.1 %    │
+  │ Mean inter-exec gap      │        7.808 ms   │      252.769 ms   │
+  └──────────────────────────┴──────────────────┴──────────────────┘
+
+  v4 dispatch overhead per GEMM is negligible — fully amortized!
+
+  Host-side per-GEMM speedup: 4.21x
+    v1: 3.5795 ms/GEMM → v4: 0.8500 ms/GEMM
+
+  Device utilization improvement: 19.21x
+    v1: 15.0% → v4: 288.1%
+
+  Effective Throughput (host-measured, 64 cores):
+    v1_1GEMMperDispatch: 2457.38 TFLOPS
+    v4_20GEMMperDispatch: 10348.80 TFLOPS
+
+================================================================================
+

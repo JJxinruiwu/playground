@@ -1,7 +1,5 @@
-/home/ubuntu/nkipy/.venv/lib/python3.12/site-packages/nki/compiler/backends/neuron/TraceKernel.py:98: UserWarning: Setting the platform_target on the kernel is deprecated. Please set the environment variable NEURON_PLATFORM_TARGET_OVERRIDE.
-  warnings.warn(
 ================================================================================
-NKI SBUF-Tiled GEMM Benchmark (C = A.T @ B, fp8 in/out, no pre-transpose)
+NKI Tiled GEMM v2 (affine_range + PSUM accum, C = A.T @ B, fp8)
 ================================================================================
 
 Configuration:
@@ -10,19 +8,21 @@ Configuration:
   Data type:   float8_e5m2 (inputs & output)
   Tile dims:   M_TILE=128, K_TILE=128, N_TILE=512
   M tiles:     32  (contraction dim)
+  Loops:       nl.affine_range (hardware loops, no unrolling)
+  Accumulate:  SBUF + tensor_tensor (ISA-level)
   Warmup iter: 5
   Bench iter:  10
 
 [1/6] Creating test data...
   A: (4096, 4096) float8_e5m2, B: (4096, 4096) float8_e5m2
 
-[2/6] Compiling NKI tiled GEMM kernel...
-The Python AST is located at: /tmp/klir_binaries/nki_gemm_tiled_g_bqp3ud/nki_gemm_tiled057ajir5_python_ast.klir
-The KLR format is located at: final_klir_filepath='/tmp/klir_binaries/nki_gemm_tiled_g_bqp3ud/nki_gemm_tiledilbxrgda.klir'
+[2/6] Compiling NKI tiled GEMM v2 kernel...
+The Python AST is located at: /tmp/klir_binaries/nki_gemm_tiled_eb9utn6w/nki_gemm_tiledueud5_39_python_ast.klir
+The KLR format is located at: final_klir_filepath='/tmp/klir_binaries/nki_gemm_tiled_eb9utn6w/nki_gemm_tiledft6anoyj.klir'
 =========== warnings from kernel tracing __main__.nki_gemm_tiled =========== 
 =========== messages from kernel tracing __main__.nki_gemm_tiled =========== 
 =========== errors from kernel tracing __main__.nki_gemm_tiled =========== 
-  Compiled in 25.08s  →  /tmp/build/nki_gemm_tiled_atb_fp8_28b516bba16c/nki_gemm_tiled_atb_fp8.neff
+  Compiled in 27.54s  →  /tmp/build/nki_gemm_tiled_v2_fp8_cdc413efc1fb/nki_gemm_tiled_v2_fp8.neff
 
 [3/6] Creating device tensors...
   Device tensors allocated
@@ -31,21 +31,23 @@ The KLR format is located at: final_klir_filepath='/tmp/klir_binaries/nki_gemm_t
   Max abs error: 4.0000,  Mean abs error: 0.0000
 
 [5/6] Generating NTFF profile trace...
-  Profile saved alongside /tmp/build/nki_gemm_tiled_atb_fp8_28b516bba16c/nki_gemm_tiled_atb_fp8.neff
+  Profile saved alongside /tmp/build/nki_gemm_tiled_v2_fp8_cdc413efc1fb/nki_gemm_tiled_v2_fp8.neff
 
 [6/6] Benchmarking...
 
   Performance Results:
   ─────────────────────────────────────
-  Mean time:         6.560 ms
-  Min  time:         6.558 ms
-  Max  time:         6.562 ms
+  Mean time:         6.559 ms
+  Min  time:         6.556 ms
+  Max  time:         6.561 ms
   Std dev:           0.001 ms
   ─────────────────────────────────────
   Throughput (mean): 20.95 TFLOPS
   Throughput (peak): 20.96 TFLOPS
   Memory BW (mean):  7.67 GB/s
   Arithmetic intens: 2731 FLOP/byte
+  ─────────────────────────────────────
+  vs nkipy compiler: 14.9% of 141 TFLOPS
   ─────────────────────────────────────
 
 ================================================================================

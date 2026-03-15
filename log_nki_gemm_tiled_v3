@@ -1,0 +1,56 @@
+================================================================================
+NKI Blocked Tiled GEMM v3 (C = A.T @ B, fp8, DMA-optimized)
+================================================================================
+
+Configuration:
+  Matrix size:  A(4096,4096) @ B(4096,4096) → C(4096,4096)
+  Operation:    C = A.T @ B
+  Data type:    float8_e5m2 (inputs & output)
+  Tile dims:    M_TILE=128, K_TILE=128, N_TILE=512
+  BLOCK_K:      4 (B tiles reused across 4 k-tiles)
+  SBUF usage:   ~8.4MB accumulators + ~0.5MB B tiles
+  DMA loads:    A=1024 (was 8192), B=2048 (was 8192)
+  DMA volume:   ~151MB (was ~671MB)
+  Warmup iter:  5
+  Bench iter:   10
+
+[1/6] Creating test data...
+  A: (4096, 4096) float8_e5m2, B: (4096, 4096) float8_e5m2
+
+[2/6] Compiling NKI blocked tiled GEMM v3 kernel...
+The Python AST is located at: /tmp/klir_binaries/nki_gemm_tiled__1ax5cqr/nki_gemm_tiled25xsjnkk_python_ast.klir
+The KLR format is located at: final_klir_filepath='/tmp/klir_binaries/nki_gemm_tiled__1ax5cqr/nki_gemm_tiled8vhml5zi.klir'
+=========== warnings from kernel tracing __main__.nki_gemm_tiled =========== 
+=========== messages from kernel tracing __main__.nki_gemm_tiled =========== 
+=========== errors from kernel tracing __main__.nki_gemm_tiled =========== 
+  Compiled in 19.98s  →  /tmp/build/nki_gemm_blocked_v3_fp8_c585e1024830/nki_gemm_blocked_v3_fp8.neff
+
+[3/6] Creating device tensors...
+  Device tensors allocated
+
+[4/6] Executing kernel + validating against NumPy reference...
+  Max abs error: 4.0000,  Mean abs error: 0.0000
+
+[5/6] Generating NTFF profile trace...
+  Profile saved alongside /tmp/build/nki_gemm_blocked_v3_fp8_c585e1024830/nki_gemm_blocked_v3_fp8.neff
+
+[6/6] Benchmarking...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Mean time:         5.058 ms
+  Min  time:         5.058 ms
+  Max  time:         5.059 ms
+  Std dev:           0.000 ms
+  ─────────────────────────────────────
+  Throughput (mean): 27.17 TFLOPS
+  Throughput (peak): 27.17 TFLOPS
+  Memory BW (mean):  9.95 GB/s
+  ─────────────────────────────────────
+  vs nkipy compiler: 19.3% of 141 TFLOPS
+  vs v1 (no block):  1.30x speedup
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================
