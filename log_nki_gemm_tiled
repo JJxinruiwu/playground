@@ -1,0 +1,53 @@
+/home/ubuntu/nkipy/.venv/lib/python3.12/site-packages/nki/compiler/backends/neuron/TraceKernel.py:98: UserWarning: Setting the platform_target on the kernel is deprecated. Please set the environment variable NEURON_PLATFORM_TARGET_OVERRIDE.
+  warnings.warn(
+================================================================================
+NKI SBUF-Tiled GEMM Benchmark
+================================================================================
+
+Configuration:
+  Matrix size: 4096×4096 @ 4096×4096
+  Data type:   float8_e5m2 (inputs) → float32 (output)
+  Tile dims:   M_TILE=128, K_TILE=128, N_TILE=512
+  K tiles:     32
+  Warmup iter: 5
+  Bench iter:  10
+
+[1/6] Creating test data...
+  A: (4096, 4096) float8_e5m2, A_T: (4096, 4096), B: (4096, 4096) float8_e5m2
+
+[2/6] Compiling NKI tiled GEMM kernel...
+The Python AST is located at: /tmp/klir_binaries/nki_gemm_tiled_qxxjd89n/nki_gemm_tiledgv1d0dgf_python_ast.klir
+The KLR format is located at: final_klir_filepath='/tmp/klir_binaries/nki_gemm_tiled_qxxjd89n/nki_gemm_tiledo32yow2x.klir'
+=========== warnings from kernel tracing __main__.nki_gemm_tiled =========== 
+=========== messages from kernel tracing __main__.nki_gemm_tiled =========== 
+=========== errors from kernel tracing __main__.nki_gemm_tiled =========== 
+  Compiled in 26.23s  →  /tmp/build/nki_gemm_tiled_a40a6736fe5e/nki_gemm_tiled.neff
+
+[3/6] Creating device tensors...
+  Device tensors allocated
+
+[4/6] Executing kernel + validating against NumPy reference...
+  Passes tolerance (rtol=1e-1, atol=1e-1)
+  Max abs error: 0.0000,  Mean abs error: 0.0000
+
+[5/6] Generating NTFF profile trace...
+  Profile saved alongside /tmp/build/nki_gemm_tiled_a40a6736fe5e/nki_gemm_tiled.neff
+
+[6/6] Benchmarking...
+
+  Performance Results:
+  ─────────────────────────────────────
+  Mean time:         6.557 ms
+  Min  time:         6.554 ms
+  Max  time:         6.560 ms
+  Std dev:           0.002 ms
+  ─────────────────────────────────────
+  Throughput (mean): 20.96 TFLOPS
+  Throughput (peak): 20.97 TFLOPS
+  Memory BW (mean):  15.35 GB/s
+  Arithmetic intens: 1365 FLOP/byte
+  ─────────────────────────────────────
+
+================================================================================
+Example completed successfully!
+================================================================================

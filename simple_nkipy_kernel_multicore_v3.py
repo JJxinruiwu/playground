@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Multi-Core Matrix Multiplication v3 — v1 + NUMA-aware thread pinning
+Multi-Core Matrix Multiplication v3 — v1 + NUMA-aware thread pinning + device tracing
 
 Each Python thread is pinned to CPUs on the same NUMA node as its NeuronCore.
-This reduces host↔device scheduling latency for dispatch and result polling.
+Uses a single SystemTraceSession (all cores) for accurate device-side timing
+via NeuronCore hardware clocks.
 
 trn2.48xlarge NUMA layout (from AWS Neuron docs):
   core_ids  0-15  → Device  0-3  → NUMA node 1 → CPUs 48-95, 144-191
@@ -11,6 +12,7 @@ trn2.48xlarge NUMA layout (from AWS Neuron docs):
   core_ids 48-63  → Device 12-15 → NUMA node 1 → CPUs 48-95, 144-191
 """
 
+import json
 import os
 import threading
 import time
@@ -20,12 +22,13 @@ import numpy as np
 
 import spike
 from nkipy.runtime import DeviceKernel
-from spike import SpikeModel
+from spike import SpikeModel, SystemTraceSession
 from spike.spike_tensor import SpikeTensor
 
 # CPU affinity per core_id based on trn2.48xlarge NUMA table
 _NUMA0_CPUS = list(range(0, 48)) + list(range(96, 144))   # NUMA node 0
 _NUMA1_CPUS = list(range(48, 96)) + list(range(144, 192)) # NUMA node 1
+
 
 def _cpus_for_core(core_id: int) -> list[int]:
     """Return the preferred CPU affinity list for a given NeuronCore ID."""
@@ -38,24 +41,51 @@ def nkipy_kernel(A, B):
     return A @ B
 
 
-def run_on_core(model, inputs, outputs, barrier, results, core_idx, iterations):
-    """Worker: pin to NUMA-local CPUs, wait at barrier, execute kernel N times."""
+def _parse_trace_durations(events_json: str) -> list[float]:
+    """Parse nc_exec_running durations (ms) from NRT sys trace JSON."""
+    if not events_json:
+        return []
+    root = json.loads(events_json)
+    events = root.get("events", [])
+    starts: dict[int, int] = {}
+    durations_ms: list[float] = []
+    for event in events:
+        if event.get("event_type") != "nc_exec_running":
+            continue
+        phase = event.get("phase")
+        tracking_id = event.get("tracking_id")
+        nc_ts = event.get("data", {}).get("nc_timestamp_ns")
+        if nc_ts is None or tracking_id is None:
+            continue
+        if phase == "start":
+            starts[tracking_id] = nc_ts
+        elif phase == "stop":
+            start_ts = starts.pop(tracking_id, None)
+            if start_ts is not None:
+                durations_ms.append((nc_ts - start_ts) / 1_000_000.0)
+    return durations_ms
+
+
+def run_on_core(model, inputs, outputs, barrier_warmup_done, barrier_bench_done,
+                core_idx, warmup_iterations, benchmark_iterations):
+    """Worker: pin to NUMA-local CPUs, run warmup, signal, run benchmark, signal."""
     try:
         os.sched_setaffinity(0, _cpus_for_core(core_idx))
     except OSError:
-        pass  # not supported on all platforms, continue without pinning
+        pass
 
-    barrier.wait()  # synchronize launch across all threads
-    start = time.perf_counter()
-    for _ in range(iterations):
+    for _ in range(warmup_iterations):
         model(inputs=inputs, outputs=outputs)
-    elapsed_ms = (time.perf_counter() - start) * 1000.0
-    results[core_idx] = elapsed_ms
+    barrier_warmup_done.wait()
+
+    for _ in range(benchmark_iterations):
+        model(inputs=inputs, outputs=outputs)
+    barrier_bench_done.wait()
 
 
 def main():
     print("=" * 80)
-    print("Multi-Core Matrix Multiplication v3 (v1 + NUMA pinning)")
+    print("Multi-Core Matrix Multiplication v3 (NUMA pinning + device tracing)")
     print("=" * 80)
 
     # Configuration
@@ -73,6 +103,7 @@ def main():
     print(f"  Warmup iter:  {warmup_iterations}")
     print(f"  Bench iter:   {benchmark_iterations}")
     print("  NUMA pinning: enabled")
+    print("  Timing:       device-side (SystemTraceSession, all cores)")
 
     # [1] Compile once
     print("\n[1/4] Compiling kernel (once)...")
@@ -82,7 +113,8 @@ def main():
 
     t0 = time.time()
     kernel_core0 = DeviceKernel.compile_and_load(
-        nkipy_kernel, A_proto, B_proto, name="simple_kernel", use_cached_if_exists=True,
+        nkipy_kernel, A_proto, B_proto,
+        name="simple_kernel", use_cached_if_exists=True,
     )
     print(f"  ✓ Compiled in {time.time() - t0:.2f}s  →  {kernel_core0.neff_path}")
 
@@ -100,59 +132,74 @@ def main():
         A = ((np.random.rand(size, size) - 0.5) * 2).astype(ml_dtypes.float8_e5m2)
         B = ((np.random.rand(size, size) - 0.5) * 2).astype(ml_dtypes.float8_e5m2)
         out = np.zeros((size, size), dtype=ml_dtypes.float8_e5m2)
-        inputs  = {"A": SpikeTensor.from_numpy(A,   "A",       core_id=core_id),
-                   "B": SpikeTensor.from_numpy(B,   "B",       core_id=core_id)}
+        inputs  = {"A": SpikeTensor.from_numpy(A, "A", core_id=core_id),
+                   "B": SpikeTensor.from_numpy(B, "B", core_id=core_id)}
         outputs = {"output0": SpikeTensor.from_numpy(out, "output0", core_id=core_id)}
         per_core_io.append((inputs, outputs))
     print(f"  ✓ Allocated tensors on {num_cores} cores")
 
-    # [4] Benchmark
-    print("\n[4/4] Benchmarking (all cores in parallel, NUMA-pinned)...")
+    # [4] Benchmark with single SystemTraceSession tracing all cores
+    print("\n[4/4] Benchmarking (all cores in parallel, NUMA-pinned, device tracing)...")
 
-    def make_threads(iters, result_buf):
-        return [
-            threading.Thread(
-                target=run_on_core,
-                args=(models[i], per_core_io[i][0], per_core_io[i][1],
-                      barrier, result_buf, i, iters),
-            )
-            for i in range(num_cores)
-        ]
+    barrier_warmup_done = threading.Barrier(num_cores + 1)
+    barrier_bench_done = threading.Barrier(num_cores + 1)
 
-    # Warmup
-    barrier = threading.Barrier(num_cores)
-    dummy = [None] * num_cores
-    warmup_threads = make_threads(warmup_iterations, dummy)
-    for t in warmup_threads: t.start()
-    for t in warmup_threads: t.join()
+    threads = [
+        threading.Thread(
+            target=run_on_core,
+            args=(models[i], per_core_io[i][0], per_core_io[i][1],
+                  barrier_warmup_done, barrier_bench_done,
+                  i, warmup_iterations, benchmark_iterations),
+        )
+        for i in range(num_cores)
+    ]
 
-    # Benchmark
-    barrier = threading.Barrier(num_cores)
-    results_ms = [None] * num_cores
-    bench_threads = make_threads(benchmark_iterations, results_ms)
-    for t in bench_threads: t.start()
-    for t in bench_threads: t.join()
+    # Single trace session for all cores (core_id=None)
+    with SystemTraceSession() as trace:
+        for t in threads:
+            t.start()
+
+        # Wait for warmup to finish, then drain warmup events
+        barrier_warmup_done.wait()
+        trace.drain_events()
+
+        # Wait for benchmark to finish
+        barrier_bench_done.wait()
+        events_json = trace.fetch_events_json()
+
+    for t in threads:
+        t.join()
+
+    # Parse device-side durations
+    durations_ms = _parse_trace_durations(events_json)
 
     # Stats
-    total_wall_ms = max(results_ms)
-    mean_ms_per_iter = total_wall_ms / benchmark_iterations
     flops_per_gemm = 2 * size * size * size
-    aggregate_tflops = flops_per_gemm * num_cores / (mean_ms_per_iter * 1e-3) / 1e12
-    bytes_total = 3 * size * size * 1 * num_cores
-    aggregate_bw_gbs = bytes_total / (mean_ms_per_iter * 1e-3) / 1e9
+    bytes_per_gemm = 3 * size * size * 1
+    expected_execs = num_cores * benchmark_iterations
 
-    print("\n  Performance Results:")
+    print(f"\n  Device Trace Results:")
     print("  ─────────────────────────────────────")
-    print(f"  Cores:                 {num_cores}")
-    print(f"  Wall time / iter:      {mean_ms_per_iter:.3f} ms")
-    for i, ms in enumerate(results_ms):
-        numa = 0 if 16 <= i <= 47 else 1
-        print(f"  Core {i:2d} [NUMA {numa}] total ({benchmark_iterations} iters): {ms:.2f} ms")
-    print("  ─────────────────────────────────────")
-    print(f"  Aggregate throughput:  {aggregate_tflops:.2f} TFLOPS")
-    print(f"  Aggregate memory BW:   {aggregate_bw_gbs:.2f} GB/s")
-    print(f"  Per-core throughput:   {aggregate_tflops / num_cores:.2f} TFLOPS")
-    print("  ─────────────────────────────────────")
+    print(f"  Captured executions:   {len(durations_ms)} (expected {expected_execs})")
+
+    if durations_ms:
+        mean_ms = sum(durations_ms) / len(durations_ms)
+        min_ms = min(durations_ms)
+        max_ms = max(durations_ms)
+        std_ms = (sum((d - mean_ms) ** 2 for d in durations_ms) / len(durations_ms)) ** 0.5
+        per_core_tflops = flops_per_gemm / (mean_ms * 1e-3) / 1e12
+        aggregate_tflops = per_core_tflops * num_cores
+        aggregate_bw_gbs = bytes_per_gemm * num_cores / (mean_ms * 1e-3) / 1e9
+
+        print(f"  Device time / GEMM:    {mean_ms:.3f} ms (mean)")
+        print(f"                         {min_ms:.3f} ms (min)")
+        print(f"                         {max_ms:.3f} ms (max)")
+        print(f"                         {std_ms:.3f} ms (std)")
+        print("  ─────────────────────────────────────")
+        print(f"  Per-core throughput:   {per_core_tflops:.2f} TFLOPS")
+        print(f"  Aggregate throughput:  {aggregate_tflops:.2f} TFLOPS")
+        print(f"  Aggregate memory BW:   {aggregate_bw_gbs:.2f} GB/s")
+        print("  ─────────────────────────────────────")
 
     print(f"\n{'=' * 80}")
     print("Example completed successfully!")

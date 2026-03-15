@@ -1,5 +1,5 @@
 ================================================================================
-Multi-Core Matrix Multiplication v4 (v1 + kernel loop ×20)
+Multi-Core Matrix Multiplication v4 (kernel loop ×20 + device tracing)
 ================================================================================
 
 Configuration:
@@ -10,9 +10,10 @@ Configuration:
   Warmup iter:      5
   Bench iter:       10
   Total GEMMs/core: 200
+  Timing:           device-side (SystemTraceSession, all cores)
 
 [1/4] Compiling kernel (once)...
-  ✓ Compiled in 42.81s  →  /tmp/build/simple_kernel_loop20_f1ac929eb3d2/simple_kernel_loop20.neff
+  ✓ Compiled in 38.85s  →  /tmp/build/simple_kernel_loop20_8634a0c856c9/simple_kernel_loop20.neff
 
 [2/4] Loading NEFF on 64 cores...
   ✓ Loaded on all 64 cores
@@ -20,82 +21,21 @@ Configuration:
 [3/4] Allocating tensors per core...
   ✓ Allocated tensors on 64 cores
 
-[4/4] Benchmarking (all cores in parallel)...
+[4/4] Benchmarking (all cores in parallel, device tracing)...
 
-  Performance Results:
+  Device Trace Results:
   ─────────────────────────────────────
-  Cores:                 64
+  Captured executions:   111 (expected 640)
   Kernel loop:           20 GEMMs/dispatch
-  Wall time / dispatch:  2192.948 ms
-  Wall time / GEMM:      109.647 ms
-  Core  0 total (10 dispatches): 12324.27 ms
-  Core  1 total (10 dispatches): 10270.78 ms
-  Core  2 total (10 dispatches): 13387.56 ms
-  Core  3 total (10 dispatches): 16468.28 ms
-  Core  4 total (10 dispatches): 21550.41 ms
-  Core  5 total (10 dispatches): 19167.35 ms
-  Core  6 total (10 dispatches): 12670.88 ms
-  Core  7 total (10 dispatches): 17482.22 ms
-  Core  8 total (10 dispatches): 14072.54 ms
-  Core  9 total (10 dispatches): 20847.31 ms
-  Core 10 total (10 dispatches): 6218.83 ms
-  Core 11 total (10 dispatches): 17134.40 ms
-  Core 12 total (10 dispatches): 15782.51 ms
-  Core 13 total (10 dispatches): 14083.01 ms
-  Core 14 total (10 dispatches): 19841.67 ms
-  Core 15 total (10 dispatches): 2804.16 ms
-  Core 16 total (10 dispatches): 2801.05 ms
-  Core 17 total (10 dispatches): 12678.10 ms
-  Core 18 total (10 dispatches): 14054.66 ms
-  Core 19 total (10 dispatches): 21571.50 ms
-  Core 20 total (10 dispatches): 18470.93 ms
-  Core 21 total (10 dispatches): 20859.32 ms
-  Core 22 total (10 dispatches): 13028.23 ms
-  Core 23 total (10 dispatches): 6903.06 ms
-  Core 24 total (10 dispatches): 7586.93 ms
-  Core 25 total (10 dispatches): 15779.14 ms
-  Core 26 total (10 dispatches): 7588.92 ms
-  Core 27 total (10 dispatches): 15091.73 ms
-  Core 28 total (10 dispatches): 2452.24 ms
-  Core 29 total (10 dispatches): 10959.14 ms
-  Core 30 total (10 dispatches): 15446.95 ms
-  Core 31 total (10 dispatches): 21580.03 ms
-  Core 32 total (10 dispatches): 6901.55 ms
-  Core 33 total (10 dispatches): 8282.76 ms
-  Core 34 total (10 dispatches): 18482.16 ms
-  Core 35 total (10 dispatches): 10298.48 ms
-  Core 36 total (10 dispatches): 2784.61 ms
-  Core 37 total (10 dispatches): 10277.43 ms
-  Core 38 total (10 dispatches): 20860.97 ms
-  Core 39 total (10 dispatches): 416.75 ms
-  Core 40 total (10 dispatches): 10977.88 ms
-  Core 41 total (10 dispatches): 6892.15 ms
-  Core 42 total (10 dispatches): 16115.65 ms
-  Core 43 total (10 dispatches): 10288.84 ms
-  Core 44 total (10 dispatches): 13383.65 ms
-  Core 45 total (10 dispatches): 18489.93 ms
-  Core 46 total (10 dispatches): 4842.81 ms
-  Core 47 total (10 dispatches): 21929.48 ms
-  Core 48 total (10 dispatches): 21216.41 ms
-  Core 49 total (10 dispatches): 19159.09 ms
-  Core 50 total (10 dispatches): 20507.53 ms
-  Core 51 total (10 dispatches): 19858.97 ms
-  Core 52 total (10 dispatches): 21583.82 ms
-  Core 53 total (10 dispatches): 17478.09 ms
-  Core 54 total (10 dispatches): 18821.63 ms
-  Core 55 total (10 dispatches): 11663.28 ms
-  Core 56 total (10 dispatches): 13023.77 ms
-  Core 57 total (10 dispatches): 14087.81 ms
-  Core 58 total (10 dispatches): 20520.74 ms
-  Core 59 total (10 dispatches): 21567.36 ms
-  Core 60 total (10 dispatches): 10985.89 ms
-  Core 61 total (10 dispatches): 5179.24 ms
-  Core 62 total (10 dispatches): 19839.13 ms
-  Core 63 total (10 dispatches): 10972.23 ms
+  Device time / dispatch:19.082 ms (mean)
+                         19.075 ms (min)
+                         19.088 ms (max)
+                         0.002 ms (std)
+  Device time / GEMM:    0.954 ms (mean)
   ─────────────────────────────────────
-  Aggregate throughput:  80.22 TFLOPS
-  Aggregate memory BW:   29.38 GB/s
-  Per-core throughput:   1.25 TFLOPS
+  Per-core throughput:   144.05 TFLOPS
+  Aggregate throughput:  9219.27 TFLOPS
+  Aggregate memory BW:   3376.20 GB/s
   ─────────────────────────────────────
 
 ================================================================================

@@ -73,6 +73,9 @@ def run_on_core(model, inputs, outputs, barrier_start, barrier_end,
         barrier_start.wait()          # synchronized start (v2)
         t0 = time.perf_counter()
         model(inputs=inputs, outputs=outputs)
+        # Force device sync: read output back to host so we wait for all
+        # queued async work to complete before stopping the timer.
+        outputs["output0"].numpy()
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
         barrier_end.wait()            # synchronized end (v2)
         if i >= warmup_iterations:

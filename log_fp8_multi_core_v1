@@ -1,5 +1,6 @@
+2026-Mar-15 04:24:58.672007 35417:35417 ERROR   NRT:nrt_config_parse_init_config            Warning: Setting NEURON_RT_ASYNC_EXEC_MAX_INFLIGHT_REQUESTS > 63 is not supported. Continuing execution by setting it to 63.
 ================================================================================
-Multi-Core Matrix Multiplication v3 (NUMA pinning + device tracing)
+Multi-Core Matrix Multiplication v1 (async + device tracing)
 ================================================================================
 
 Configuration:
@@ -8,11 +9,10 @@ Configuration:
   Data type:    float8_e5m2
   Warmup iter:  5
   Bench iter:   10
-  NUMA pinning: enabled
   Timing:       device-side (SystemTraceSession, all cores)
 
 [1/4] Compiling kernel (once)...
-  ✓ Compiled in 14.43s  →  /tmp/build/simple_kernel_5277311d585b/simple_kernel.neff
+  ✓ Compiled in 13.29s  →  /tmp/build/simple_kernel_98481b1eed54/simple_kernel.neff
 
 [2/4] Loading NEFF on 64 cores...
   ✓ Loaded on all 64 cores
@@ -20,19 +20,19 @@ Configuration:
 [3/4] Allocating tensors per core...
   ✓ Allocated tensors on 64 cores
 
-[4/4] Benchmarking (all cores in parallel, NUMA-pinned, device tracing)...
+[4/4] Benchmarking (all cores in parallel, device tracing)...
 
   Device Trace Results:
   ─────────────────────────────────────
-  Captured executions:   623 (expected 640)
-  Device time / GEMM:    0.974 ms (mean)
+  Captured executions:   605 (expected 640)
+  Device time / GEMM:    0.975 ms (mean)
                          0.973 ms (min)
                          0.976 ms (max)
                          0.000 ms (std)
   ─────────────────────────────────────
-  Per-core throughput:   141.04 TFLOPS
-  Aggregate throughput:  9026.64 TFLOPS
-  Aggregate memory BW:   3305.65 GB/s
+  Per-core throughput:   141.03 TFLOPS
+  Aggregate throughput:  9025.87 TFLOPS
+  Aggregate memory BW:   3305.37 GB/s
   ─────────────────────────────────────
 
 ================================================================================
